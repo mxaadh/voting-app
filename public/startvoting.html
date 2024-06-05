@@ -64,7 +64,7 @@
         <div class="candidates">
           <h3 class="text-center">Candidate's Name</h3>
           <form id="voting-form">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="candidate-x">
                 <input
                   type="radio"
@@ -75,7 +75,7 @@
                 Candidate X </label
               ><br />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="candidate-y">
                 <input
                   type="radio"
@@ -86,7 +86,7 @@
                 Candidate Y </label
               ><br />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="candidate-z">
                 <input
                   type="radio"
@@ -97,11 +97,14 @@
                 Candidate Z </label
               ><br />
             </div>
-            <!-- <button class="Voting" type="submit">Submit</button> -->
+
+            <div class="col-md-3">
+              <button class="btn btn-danger bg-orange" type="submit">
+                Submit
+              </button>
+            </div>
           </form>
-          <div class="Voting-btn">
-            <button class="Voting" type="submit">Submit</button>
-          </div>
+          <div class="mb-5"></div>
         </div>
       </div>
     </section>
@@ -202,14 +205,59 @@
             'input[name="candidate"]:checked'
           );
           if (candidate) {
-            var modal = new bootstrap.Modal(
-              document.getElementById("voteConfirmationModal")
-            );
-            modal.show();
+            castVote(candidate.value);
           } else {
             alert("Please select a candidate to vote for.");
           }
         });
+
+      // Alert on saved user
+      document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const login = urlParams.get("login");
+        const username = urlParams.get("username");
+        const cnic = urlParams.get("cnic");
+
+        if (login === "true") {
+          alert("Login successfully");
+          localStorage.setItem("username", username);
+          localStorage.setItem("cnic", cnic);
+        }
+      });
+
+      async function castVote(candidate) {
+        console.log(candidate);
+        const username = localStorage.getItem("username");
+        const cnic = localStorage.getItem("cnic");
+
+        try {
+          const response = await fetch("/cast-vote", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ candidate, username, cnic }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            var modal = new bootstrap.Modal(
+              document.getElementById("voteConfirmationModal")
+            );
+            modal.show();
+
+            setTimeout(() => {
+              window.location.href = "/result";
+            }, 2000);
+          } else {
+            alert(result.message);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred. Please try again.");
+        }
+      }
     </script>
   </body>
 </html>

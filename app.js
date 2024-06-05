@@ -57,6 +57,7 @@ mongoose
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log(err));
 const User = require("./models/User");
+const Vote = require("./models/Vote");
 
 /*
  *
@@ -92,15 +93,37 @@ app.post("/submit-login-form", async (req, res) => {
 
   try {
     // Find user in the database
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username, password });
 
     if (user) {
-      res.redirect("/voting?login=true");
+      // /voting?login=true&username=${user.username}&cnic=${cnic}
+      // res.redirect("/voting?login=true");
+      res.redirect(
+        `/voting?login=true&username=${user.username}&cnic=${user.cnic}`
+      );
     } else {
       res.redirect("/sign-up-in?login=false");
     }
   } catch (error) {
     res.redirect("/sign-up-in?login=false");
+  }
+});
+
+app.post("/cast-vote", async (req, res) => {
+  const { candidate, username, cnic } = req.body;
+  const data = {
+    candidate,
+    username,
+    cnic,
+  };
+  const newVote = new Vote(data);
+
+  try {
+    const savedVote = await newVote.save();
+    // res.redirect("/result");
+    res.status(201).json({ candidate, message: "Thank you for voting!" });
+  } catch (error) {
+    res.redirect("/sign-up-in");
   }
 });
 
