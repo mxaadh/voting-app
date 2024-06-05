@@ -87,6 +87,23 @@ app.post("/submit-sign-up-form", async (req, res) => {
   }
 });
 
+app.post("/submit-login-form", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    // Find user in the database
+    const user = await User.findOne({ username });
+
+    if (user) {
+      res.redirect("/voting?login=true");
+    } else {
+      res.redirect("/sign-up-in?login=false");
+    }
+  } catch (error) {
+    res.redirect("/sign-up-in?login=false");
+  }
+});
+
 // Web App running status
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

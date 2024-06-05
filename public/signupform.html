@@ -31,15 +31,15 @@
     <section class="sign-form">
         <div class="container">
             <div class="signin-signup">
-                <form action="" class="sign-in-form">
+                <form action="/submit-login-form" method="post" class="sign-in-form">
                     <h2 class="title">Sign in</h2>
                     <div class="input-field">
                         <i class="fas fa-user"></i>
-                        <input type="text" placeholder="Username">
+                        <input type="text" name="username" placeholder="Username" required>
                     </div>
                     <div class="input-field">
                         <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Password">
+                        <input type="password" name="password" placeholder="Password" required>
                     </div>
                     <input type="submit" value="Login" class="btn">
                     <p class="social-text">Or Sign in with social platform</p>
@@ -167,6 +167,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const savedUser = urlParams.get('savedUser');
+            const login = urlParams.get('login');
 
             if (savedUser === 'true') {
                 alert('User is Saved.');
@@ -174,6 +175,12 @@
             } else if(savedUser === 'false') {
                 alert('Error occured while Saving user.');
                 // Your logic here
+            }
+
+            console.log(login, "<< savedUser");
+
+            if (login === 'false') {
+                alert('Incorrect username or password');
             }
         });
     </script>
