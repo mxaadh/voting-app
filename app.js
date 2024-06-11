@@ -61,7 +61,7 @@ app.get("/Individual-vote-list", (req, res) =>
 );
 
 app.get("/voter-name", (req, res) =>
-  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
+  res.sendFile(path.join(__dirname, "public", "voterName.html"))
 );
 
 app.get("/result", (req, res) =>
@@ -193,7 +193,6 @@ app.get("/today-vote-list-data", async (req, res) => {
 app.get("/Individual-vote-list-date", async (req, res) => {
   const { start, end } = getTodayRange();
   let candidate = `Candidate ${req.query.candidate}`;
-  console.log(candidate, "<< candidate");
   try {
     const vote = await Vote.find({
       candidate,
@@ -205,9 +204,18 @@ app.get("/Individual-vote-list-date", async (req, res) => {
   }
 });
 
-app.get("/voter-name-date", (req, res) =>
-  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
-);
+app.get("/voter-name-date", async (req, res) => {
+  const { start, end } = getTodayRange();
+
+  try {
+    const vote = await Vote.find({
+      votingDate: { $gte: start, $lt: end },
+    });
+    res.json(vote);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 app.get("/result-date", (req, res) =>
   res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
