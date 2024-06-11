@@ -63,12 +63,13 @@
         <h2 class="text-center">Welcome to Admin Main Menu</h2>
         <div class="candidates">
           <h3 class="text-center">Check Individual Voter list</h3>
-          <form id="voting-form">
+          <div class="row">
             <div class="col-md-4">
               <center>
                 <a
+                  href="#"
+                  onclick="return getIndividualVoteListDate('X')"
                   class="btn btn-primary"
-                  href="/Individual-vote-list?candidate=X"
                   >X</a
                 >
               </center>
@@ -76,8 +77,9 @@
             <div class="col-md-4">
               <center>
                 <a
+                  href="#"
+                  onclick="return getIndividualVoteListDate('Y')"
                   class="btn btn-primary"
-                  href="/Individual-vote-list?candidate=Y"
                   >Y</a
                 >
               </center>
@@ -85,14 +87,31 @@
             <div class="col-md-4">
               <center>
                 <a
+                  href="#"
+                  onclick="return getIndividualVoteListDate('Z')"
                   class="btn btn-primary"
-                  href="/Individual-vote-list?candidate=Z"
                   >Z</a
                 >
               </center>
             </div>
-          </form>
+          </div>
           <div class="mb-5"></div>
+          <div class="card">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">CNIC</th>
+                  <th scope="col">Date</th>
+                </tr>
+              </thead>
+              <tbody id="data"></tbody>
+            </table>
+          </div>
+          <center>
+            <a class="btn btn-primary m-5" href="/dashboard">Back to Admin</a>
+          </center>
         </div>
       </div>
     </section>
@@ -185,66 +204,37 @@
       AOS.init();
     </script>
     <script>
-      document
-        .getElementById("voting-form")
-        .addEventListener("submit", function (event) {
-          event.preventDefault(); // Form submission ko rokta hai
-          const candidate = document.querySelector(
-            'input[name="candidate"]:checked'
-          );
-          if (candidate) {
-            castVote(candidate.value);
-          } else {
-            alert("Please select a candidate to vote for.");
-          }
-        });
+      function getIndividualVoteListDate(q) {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json; charset=utf-8");
 
-      // Alert on saved user
-      document.addEventListener("DOMContentLoaded", function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const login = urlParams.get("login");
-        const username = urlParams.get("username");
-        const cnic = urlParams.get("cnic");
+        const requestOptions = {
+          method: "GET",
+          headers: myHeaders,
+          redirect: "follow",
+        };
 
-        if (login === "true") {
-          alert("Login successfully");
-          localStorage.setItem("username", username);
-          localStorage.setItem("cnic", cnic);
-        }
-      });
-
-      async function castVote(candidate) {
-        console.log(candidate);
-        const username = localStorage.getItem("username");
-        const cnic = localStorage.getItem("cnic");
-
-        try {
-          const response = await fetch("/cast-vote", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ candidate, username, cnic }),
-          });
-
-          const result = await response.json();
-
-          if (response.ok) {
-            var modal = new bootstrap.Modal(
-              document.getElementById("voteConfirmationModal")
-            );
-            modal.show();
-
-            setTimeout(() => {
-              window.location.href = "/result";
-            }, 2000);
-          } else {
-            alert(result.message);
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("An error occurred. Please try again.");
-        }
+        let tbody = "";
+        fetch(
+          `http://localhost:4000/Individual-vote-list-date?candidate=${q}`,
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((result) => {
+            result.map((item, i) => {
+              tbody += `<tr>
+              <th scope="row">${i + 1}</th>
+              <td>${item.username}</td>
+              <td>${item.cnic}</td>
+              <td>${item.votingDate}</td>
+            </tr>`;
+            });
+          })
+          .then(() => {
+            let dataTable = document.getElementById("data");
+            dataTable.innerHTML = tbody;
+          })
+          .catch((error) => console.error(error));
       }
     </script>
   </body>

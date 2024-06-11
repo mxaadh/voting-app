@@ -168,16 +168,16 @@ app.post("/submit-login-admin", async (req, res) => {
   }
 });
 
-app.get("/today-vote-list-data", async (req, res) => {
-  // Helper function to get today's date range
-  const getTodayRange = () => {
-    const start = new Date();
-    start.setHours(0, 0, 0, 0); // Start of today
-    const end = new Date();
-    end.setHours(23, 59, 59, 999); // End of today
-    return { start, end };
-  };
+// Helper function to get today's date range
+const getTodayRange = () => {
+  const start = new Date();
+  start.setHours(0, 0, 0, 0); // Start of today
+  const end = new Date();
+  end.setHours(23, 59, 59, 999); // End of today
+  return { start, end };
+};
 
+app.get("/today-vote-list-data", async (req, res) => {
   const { start, end } = getTodayRange();
 
   try {
@@ -190,9 +190,20 @@ app.get("/today-vote-list-data", async (req, res) => {
   }
 });
 
-app.get("/Individual-vote-list-date", (req, res) =>
-  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
-);
+app.get("/Individual-vote-list-date", async (req, res) => {
+  const { start, end } = getTodayRange();
+  let candidate = `Candidate ${req.query.candidate}`;
+  console.log(candidate, "<< candidate");
+  try {
+    const vote = await Vote.find({
+      candidate,
+      votingDate: { $gte: start, $lt: end },
+    });
+    res.json(vote);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 app.get("/voter-name-date", (req, res) =>
   res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
