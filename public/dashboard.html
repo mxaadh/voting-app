@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+      integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css"
+      integrity="sha512-OTcub78R3msOCtY3Tc6FzeDJ8N9qvQn1Ph49ou13xgA9VsH9+LRxoFU6EqLhW4+PKRfU+/HReXmSZXHEkpYoOA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./css/startvoting.css" />
+    <!-- <link rel="stylesheet" href="./css/custom-modal.css"> -->
+  </head>
+
+  <body>
+    <section
+      class="nav-bar"
+      data-aos="fade-down"
+      data-aos-easing="linear"
+      data-aos-duration="500"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img
+            src="https://png.pngtree.com/png-clipart/20220529/original/pngtree-vote-text-with-check-mark-and-check-box-png-image_7737463.png"
+            alt=""
+          />
+        </a>
+        <span>
+          <a class="navbar-brand" href="/"> HOME </a>
+          <a class="navbar-brand" href="/result"> Result </a>
+          <a class="navbar-brand" href="/login"> Login </a>
+        </span>
+      </div>
+    </section>
+
+    <section id="start-voting">
+      <div class="container">
+        <h2 class="text-center">Welcome to Admin Main Menu</h2>
+        <div class="candidates">
+          <h3 class="text-center">Dashboard</h3>
+          <form id="voting-form">
+            <div class="col-md-3">
+              <a class="btn btn-primary" href="/today-vote-list"
+                >Check Today's Voter list</a
+              >
+            </div>
+            <div class="col-md-3">
+              <a class="btn btn-primary" href="/Individual-vote-list"
+                >Check Individual Voter list</a
+              >
+            </div>
+            <div class="col-md-3">
+              <a class="btn btn-primary" href="/voter-name">Sorted names</a>
+            </div>
+            <div class="col-md-3">
+              <a class="btn btn-primary" href="/result">Generate result</a>
+            </div>
+          </form>
+          <div class="mb-5"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="voteConfirmationModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content custom-modal-content">
+          <div class="modal-header custom-modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Vote Confirmation
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body custom-modal-body">Thank you for voting!</div>
+          <div class="modal-footer custom-modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer
+      class="footer"
+      data-aos="fade-down"
+      data-aos-easing="linear"
+      data-aos-duration="800"
+    >
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <h3>About Us</h3>
+            <p>
+              We are dedicated to fostering transparency and reliability in the
+              electoral process. Our team is committed to ensuring a fair and
+              secure voting experience for all.
+            </p>
+          </div>
+          <div class="col-md-4">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">Result</a></li>
+              <li><a href="#">Login</a></li>
+              <li><a href="#">FAQs</a></li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h3>Contact Us</h3>
+            <address>
+              123 Voting St, <br />
+              Election City, <br />
+              Pakistan <br />
+              <i class="fa-solid fa-phone">&nbsp; &nbsp;+92 123 456 789</i>
+              <br />
+              <i class="fas fa-envelope">&nbsp;&nbsp;info@votingapp.com</i>
+            </address>
+          </div>
+          <div class="col-md-12">
+            <p>&copy; 2024 Voting App. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+    <script>
+      document
+        .getElementById("voting-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Form submission ko rokta hai
+          const candidate = document.querySelector(
+            'input[name="candidate"]:checked'
+          );
+          if (candidate) {
+            castVote(candidate.value);
+          } else {
+            alert("Please select a candidate to vote for.");
+          }
+        });
+
+      // Alert on saved user
+      document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const login = urlParams.get("login");
+        const username = urlParams.get("username");
+        const cnic = urlParams.get("cnic");
+
+        if (login === "true") {
+          alert("Login successfully");
+          localStorage.setItem("username", username);
+          localStorage.setItem("cnic", cnic);
+        }
+      });
+
+      async function castVote(candidate) {
+        console.log(candidate);
+        const username = localStorage.getItem("username");
+        const cnic = localStorage.getItem("cnic");
+
+        try {
+          const response = await fetch("/cast-vote", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ candidate, username, cnic }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            var modal = new bootstrap.Modal(
+              document.getElementById("voteConfirmationModal")
+            );
+            modal.show();
+
+            setTimeout(() => {
+              window.location.href = "/result";
+            }, 2000);
+          } else {
+            alert(result.message);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred. Please try again.");
+        }
+      }
+    </script>
+  </body>
+</html>

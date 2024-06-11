@@ -42,8 +42,30 @@ app.get("/voting", (req, res) =>
 );
 
 // User page serve (startvoting.html)
-app.get("/user", (req, res) =>
-  res.sendFile(path.join(__dirname, "public", "user.html"))
+app.get("/admin", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "admin.html"))
+);
+
+// Dashboard page serve (dashboard.html)
+app.get("/dashboard", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "dashboard.html"))
+);
+
+// Voteing list page serve (votelist.html)
+app.get("/today-vote-list", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
+);
+
+app.get("/Individual-vote-list", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "individualVoteList.html"))
+);
+
+app.get("/voter-name", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
+);
+
+app.get("/result", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
 );
 
 /*
@@ -58,6 +80,7 @@ mongoose
   .catch((err) => console.log(err));
 const User = require("./models/User");
 const Vote = require("./models/Vote");
+const Admin = require("./models/Admin");
 
 /*
  *
@@ -126,6 +149,58 @@ app.post("/cast-vote", async (req, res) => {
     res.redirect("/sign-up-in");
   }
 });
+
+app.post("/submit-login-admin", async (req, res) => {
+  const { username, password } = req.body;
+  const data = { username, password };
+  const admin = await Admin.findOne(data);
+  // const newAdmin = new Admin(data);
+
+  try {
+    // const admin = await newAdmin.save();
+    if (admin) {
+      res.redirect(`/dashboard?login=true&username=${admin.username}`);
+    } else {
+      res.redirect("/admin?login=false");
+    }
+  } catch (error) {
+    res.redirect("/admin?login=false");
+  }
+});
+
+app.get("/today-vote-list-data", async (req, res) => {
+  // Helper function to get today's date range
+  const getTodayRange = () => {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0); // Start of today
+    const end = new Date();
+    end.setHours(23, 59, 59, 999); // End of today
+    return { start, end };
+  };
+
+  const { start, end } = getTodayRange();
+
+  try {
+    const vote = await Vote.find({
+      votingDate: { $gte: start, $lt: end },
+    });
+    res.json(vote);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+app.get("/Individual-vote-list-date", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
+);
+
+app.get("/voter-name-date", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
+);
+
+app.get("/result-date", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
+);
 
 // Web App running status
 app.listen(port, () => {

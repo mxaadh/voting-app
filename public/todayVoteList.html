@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Dashboard</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -32,9 +32,10 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="login.css" />
-    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/startvoting.css" />
+    <!-- <link rel="stylesheet" href="./css/custom-modal.css"> -->
   </head>
+
   <body>
     <section
       class="nav-bar"
@@ -57,26 +58,65 @@
       </div>
     </section>
 
-    <section class="login container-fluid">
+    <section id="start-voting">
       <div class="container">
-        <div class="row">
-          <img
-            src="./images/output-onlinegiftools (5).gif"
-            alt=""
-            class="mx-auto d-block"
-          />
-        </div>
-        <div class="row">
-          <div class="col-md-6 text-center">
-            <button><a href="/admin">Admin</a></button>
+        <h2 class="text-center">Welcome to Admin Main Menu</h2>
+        <div class="candidates">
+          <h3 class="text-center">Check Today's Voter list</h3>
+          <div class="card">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">CNIC</th>
+                  <th scope="col">Date</th>
+                </tr>
+              </thead>
+              <tbody id="data"></tbody>
+            </table>
           </div>
-          <div class="col-md-6 text-center">
-            <!-- <button><a href="./user.html">User</a></button> -->
-            <button><a href="/sign-up-in">User</a></button>
-          </div>
+          <center>
+            <a class="btn btn-primary m-5" href="/dashboard">Back to Admin</a>
+          </center>
         </div>
       </div>
     </section>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="voteConfirmationModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content custom-modal-content">
+          <div class="modal-header custom-modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Vote Confirmation
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body custom-modal-body">Thank you for voting!</div>
+          <div class="modal-footer custom-modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <footer
       class="footer"
@@ -97,7 +137,7 @@
           <div class="col-md-4">
             <h3>Quick Links</h3>
             <ul>
-              <li><a href="">Home</a></li>
+              <li><a href="#">Home</a></li>
               <li><a href="#">Result</a></li>
               <li><a href="#">Login</a></li>
               <li><a href="#">FAQs</a></li>
@@ -111,7 +151,7 @@
               Pakistan <br />
               <i class="fa-solid fa-phone">&nbsp; &nbsp;+92 123 456 789</i>
               <br />
-              <i class="fas fa-envelope">&nbsp; &nbsp; info@votingapp.com</i>
+              <i class="fas fa-envelope">&nbsp;&nbsp;info@votingapp.com</i>
             </address>
           </div>
           <div class="col-md-12">
@@ -129,6 +169,47 @@
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script>
       AOS.init();
+    </script>
+    <script>
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json; charset=utf-8");
+
+      const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+
+      let tbody = "";
+      fetch("http://localhost:4000/today-vote-list-data", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          result.map((item, i) => {
+            tbody += `<tr>
+              <th scope="row">${i + 1}</th>
+              <td>${item.username}</td>
+              <td>${item.cnic}</td>
+              <td>${item.votingDate}</td>
+            </tr>`;
+          });
+        })
+        .then(() => {
+          let dataTable = document.getElementById("data");
+          dataTable.innerHTML = tbody;
+        })
+        .catch((error) => console.error(error));
+
+      // Alert on saved user
+      document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const login = urlParams.get("login");
+        const username = urlParams.get("username");
+
+        if (login === "true") {
+          alert("Login successfully");
+          localStorage.setItem("username", username);
+        }
+      });
     </script>
   </body>
 </html>
