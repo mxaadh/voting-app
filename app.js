@@ -64,10 +64,6 @@ app.get("/voter-name", (req, res) =>
   res.sendFile(path.join(__dirname, "public", "voterName.html"))
 );
 
-app.get("/result", (req, res) =>
-  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
-);
-
 /*
  *
  * Setup MongoDB connection using mongoose
@@ -217,9 +213,33 @@ app.get("/voter-name-date", async (req, res) => {
   }
 });
 
-app.get("/result-date", (req, res) =>
-  res.sendFile(path.join(__dirname, "public", "todayVoteList.html"))
-);
+app.get("/result-date", async (req, res) => {
+  const { start, end } = getTodayRange();
+
+  try {
+    const voteX = await Vote.find({
+      candidate: "Candidate X",
+      votingDate: { $gte: start, $lt: end },
+    });
+    const voteY = await Vote.find({
+      candidate: "Candidate Y",
+      votingDate: { $gte: start, $lt: end },
+    });
+    const voteZ = await Vote.find({
+      candidate: "Candidate Z",
+      votingDate: { $gte: start, $lt: end },
+    });
+
+    const data = {
+      voteX: voteX.length,
+      voteY: voteY.length,
+      voteZ: voteZ.length,
+    };
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // Web App running status
 app.listen(port, () => {
